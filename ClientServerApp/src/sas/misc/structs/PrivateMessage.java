@@ -7,6 +7,8 @@ package sas.misc.structs;
 
 import java.io.Serializable;
 
+import sas.misc.server.exceptions.InvalidExpeditorLengthException;
+
 /**
  *
  * @author MCL
@@ -15,7 +17,7 @@ public class PrivateMessage extends Message implements Serializable {
 
     private String destinatar;
 
-    public PrivateMessage(String dest, String expeditor, String continut) {
+    public PrivateMessage(String dest, String expeditor, String continut) throws Exception {
         super(expeditor, continut);
         destinatar = dest;
     }
