@@ -27,7 +27,7 @@ public class ClientPeer {
         socket = s;
     }
 
-    public void sendMessage(String message) {
+    public void sendMessage(String message) throws Exception{
         try {
             Message m = new Message(userName, message);
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
@@ -38,7 +38,7 @@ public class ClientPeer {
         }
     }
 
-    public void sendMessage(String message, String recipient) {
+    public void sendMessage(String message, String recipient) throws Exception{
         try {
             PrivateMessage pm = new PrivateMessage(recipient, userName, message);
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
