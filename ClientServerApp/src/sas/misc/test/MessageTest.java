@@ -12,11 +12,7 @@ import sas.misc.structs.Message;
 public class MessageTest {
 
 	Message message;
-	String stringLength20 = "amcdloedlcfrodscvghy";
-	String stringLengthUp20 = "amcdloedlcfrodscvghyp";
-	String stringLength1100 = get1100Characters(stringLength20);
-	String stringLengthUp1100 = get1100Characters(stringLength20) + 'c';
-
+	
 	@Before
 	public void setUp() throws Exception {
 		String expeditor = "John";
@@ -44,7 +40,7 @@ public class MessageTest {
 	@Test
 	public void ExceptionConstructorVerifyExpeditor() throws Exception {
 		try {
-			Message message = new Message(stringLengthUp20, "Hello!");
+			Message message = new Message(new Utils().stringLengthUp20, "Hello!");
 			fail("Expected an InvalidExpeditorLengthException to be thrown");
 		} catch (InvalidExpeditorLengthException e) {
 		}
@@ -53,7 +49,7 @@ public class MessageTest {
 	@Test
 	public void ExceptionConstructorVerifyContinut() throws Exception {
 		try {
-			Message message = new Message("John", stringLengthUp1100);
+			Message message = new Message("John", new Utils().get1100Characters() + 'c');
 			fail("Expected an InvalidContentLengthException to be thrown");
 		} catch (InvalidContentLengthException e) {
 		}
@@ -67,7 +63,7 @@ public class MessageTest {
 	
 	@Test
 	public void testTopBoundaryExpeditorLength() throws Exception{
-		Message m = new Message(stringLength20,"Hello!");
+		Message m = new Message(new Utils().stringLength20,"Hello!");
 		if (m.getExpeditor().length() == 20) assert(true);
 	}
 	
@@ -110,7 +106,7 @@ public class MessageTest {
 	@Test
 	public void testSetExpeditorException()throws Exception {
 		try {
-			Message message = new Message(stringLengthUp20, "Hello!");
+			Message message = new Message(new Utils().stringLengthUp20, "Hello!");
 			fail("Expected an InvalidExpeditorLengthException to be thrown");
 		} catch (InvalidExpeditorLengthException e) {
 		}
@@ -127,7 +123,7 @@ public class MessageTest {
 	@Test
 	public void testSetContinutException() throws Exception {
 		try {
-			Message message = new Message("John", stringLengthUp1100);
+			Message message = new Message("John", new Utils().get1100Characters() + 'c');
 			fail("Expected an InvalidContentLengthException to be thrown");
 		} catch (InvalidContentLengthException e) {
 		}
@@ -148,13 +144,4 @@ public class MessageTest {
 		m1.setContinut("Hello!");
 		assertEquals(m1.getContinut(),m2.getContinut());
 	}
-
-	public String get1100Characters(String seed) {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < 55; i++) {
-			sb.append(seed);
-		}
-		return sb.toString();
-	}
-
 }

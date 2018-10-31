@@ -42,7 +42,7 @@ public class ServerConfig {
 
     public void readConfigFile(String file) throws IOException,
             InvalidFormatException, MissingKeyException, UnknownKeyException {
-        int x = 0;
+
         FileInputStream fileInputStream = new FileInputStream(file);
         @SuppressWarnings("resource")
         BufferedReader buffer = new BufferedReader(new InputStreamReader(fileInputStream));
@@ -53,7 +53,6 @@ public class ServerConfig {
             }
             String trimedLine = line.trim();
             if (trimedLine.startsWith("#") || line.length() == 0) {
-                x = 0;
             } else {
                 if (trimedLine.startsWith("TCP_PORT=")) {
                     tcpPort = Integer.parseInt(((String[]) trimedLine.split("="))[1]);

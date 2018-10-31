@@ -10,6 +10,8 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import sas.misc.server.exceptions.InvalidContentLengthException;
 import sas.misc.structs.Message;
 import sas.misc.structs.PrivateMessage;
 
@@ -18,17 +20,29 @@ import sas.misc.structs.PrivateMessage;
  * @author MCL
  */
 public class ClientPeer {
-
+	
+	//userName trebuie sa fie mai mic de 20 de caractere si mai mare de 0
+	//message trebuie sa fie mai mic sau egal cu 1100 de caractere si mai mare ca 0
     private final String userName;
     private final Socket socket;
 
     public ClientPeer(String name, Socket s) {
-        userName = name;
+        if (name.length() >= 20 || name.length() < 1) throw new InvalidContentLengthException();
+    	userName = name;
         socket = s;
+    }
+    
+    public String getUserName() {
+    	return this.userName;
+    }
+    
+    public Socket getSocket() {
+    	return this.socket;
     }
 
     public void sendMessage(String message) throws Exception{
-        try {
+        if (message.length() > 1100) throw new InvalidContentLengthException();  	
+    	try {
             Message m = new Message(userName, message);
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             oos.writeObject(m);
@@ -39,7 +53,9 @@ public class ClientPeer {
     }
 
     public void sendMessage(String message, String recipient) throws Exception{
-        try {
+    	if (message.length() > 1100 || message.length() < 1) throw new InvalidContentLengthException();
+    	if (recipient.length() >= 20 || recipient.length() < 1) throw new InvalidContentLengthException();
+    	try {
             PrivateMessage pm = new PrivateMessage(recipient, userName, message);
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             oos.writeObject(pm);
