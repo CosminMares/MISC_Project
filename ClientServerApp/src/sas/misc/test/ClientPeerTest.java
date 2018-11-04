@@ -31,16 +31,15 @@ public class ClientPeerTest {
 //		Server.main(null);
 //	}
 
-	@After
-	public void after() {
-		try {
-			s.close();
-		} catch (IOException e) {
-		}
-	}
-
 	@Before
 	public void setUp() {
+		this.userName = "John";
+		this.localhost = "127.0.0.1";
+		this.port = 9000;
+		try {
+			s = new Socket(localhost, port);
+		} catch (IOException e) {
+		}
 
 		this.thread = new Thread() {
 			public void run() {
@@ -48,12 +47,13 @@ public class ClientPeerTest {
 			}
 		};
 		thread.start();
-
-		this.userName = "John";
-		this.localhost = "127.0.0.1";
-		this.port = 9000;
+	}
+	
+	@After
+	public void after() {
 		try {
-			s = new Socket(localhost, port);
+			if (s != null)
+				s.close();
 		} catch (IOException e) {
 		}
 	}
@@ -107,14 +107,15 @@ public class ClientPeerTest {
 			assert (true);
 	}
 
-	// Test Right for sendMessage(String message) method
+	// Test Right (Right-BICEP) for sendMessage(String message) method
 	@Test
 	public void testSendMessageFunctionality() throws Exception {
 		String expectedMessage = "John: Hello";
 		String message = "Hello";
 		Utils utils = new Utils();
-		utils.serverFake(9090);
-		Socket newSocket = utils.socketFake(this.localhost, 9090);
+		utils.serverFake(9100);
+		Thread.sleep(1000);
+		Socket newSocket = utils.socketFake(this.localhost, 9100);
 		ClientPeer cp = new ClientPeer(this.userName, newSocket);
 		cp.sendMessage(message);
 		while (!utils.messageThread.isAlive()) {
@@ -123,11 +124,12 @@ public class ClientPeerTest {
 	}
 
 	// Test top Interval Error for sendMessage(String message) method
+	// Error form Right-BICEP
 	@Test
 	public void testTopIntervalErrorSendMessage() throws Exception {
 		ClientPeer cp = new ClientPeer(this.localhost, this.s);
 		Utils utils = new Utils();
-		String toBigMessage = utils.get1100Characters() + 'f'; // 1101 characters string
+		String toBigMessage = utils.get1100CharactersStub() + 'f'; // 1101 characters string
 		try {
 			cp.sendMessage(toBigMessage);
 			fail("Expected an InvalidContentLengthException to be thrown");
@@ -136,6 +138,7 @@ public class ClientPeerTest {
 	}
 
 	// Test low Interval Error for sendMessage(String message) method
+	// Error form Right-BICEP
 	@Test
 	public void testBottomIntervalErrorSendMessage() throws Exception {
 		ClientPeer cp = new ClientPeer(this.localhost, this.s);
@@ -147,13 +150,13 @@ public class ClientPeerTest {
 		}
 	}
 
-	// Test top Boundary for sendMessage(String message) method
+	// Test top Boundary (Right-BICEP) for sendMessage(String message) method
 	// test for 1100 characters message
 	@Test
 	public void testTopBoundarySendMessage() throws Exception {
 		ClientPeer cp = new ClientPeer(this.localhost, this.s);
 		Utils utils = new Utils();
-		String message = utils.get1100Characters();
+		String message = utils.get1100CharactersStub();
 		try {
 			cp.sendMessage(message);
 		} catch (InvalidContentLengthException e) {
@@ -161,7 +164,7 @@ public class ClientPeerTest {
 		}
 	}
 
-	// Test low Boundary for sendMessage(String message) method
+	// Test low Boundary (Right-BICEP) for sendMessage(String message) method
 	// Test for 1 character message
 	@Test
 	public void testLowBoundarySendMessage() throws Exception {
@@ -174,7 +177,7 @@ public class ClientPeerTest {
 		}
 	}
 
-	// Test Right for sendMessage(String message, String recipient) method
+	// Test Right (Right-BICEP) for sendMessage(String message, String recipient) method
 	@Test
 	public void testSendMessageTwoFunctionality() throws Exception {
 		String recipient = "Bob";
@@ -182,6 +185,7 @@ public class ClientPeerTest {
 		String message = "Hello";
 		Utils utils = new Utils();
 		utils.serverFakePrivateMessage(9091);
+		Thread.sleep(1000);
 		Socket newSocket = utils.socketFake(this.localhost, 9091);
 		ClientPeer cp = new ClientPeer(this.userName, newSocket);
 		cp.sendMessage(message, recipient);
@@ -190,7 +194,7 @@ public class ClientPeerTest {
 		}
 	}
 
-	// Test Error at message length for sendMessage(String message, String
+	// Test Error (Right-BICEP) at message length for sendMessage(String message, String
 	// recipient) method
 	@Test
 	public void testErrorMessageForSecondSendMessage() throws Exception {
@@ -204,7 +208,7 @@ public class ClientPeerTest {
 		}
 	}
 
-	// Test Error at message length for sendMessage(String message, String
+	// Test Error (Right-BICEP) at message length for sendMessage(String message, String
 	// recipient) method
 	@Test
 	public void testErrorRecipientForSecondSendMessage() throws Exception {
@@ -218,13 +222,13 @@ public class ClientPeerTest {
 		}
 	}
 
-	// Test top Boundary for sendMessage(String message, String recipient) method
+	// Test top Boundary (Right-BICEP) for sendMessage(String message, String recipient) method
 	// test for 1100 characters message
 	@Test
 	public void testTopBoundaryMessageSecondSendMessage() throws Exception {
 		ClientPeer cp = new ClientPeer(this.localhost, this.s);
 		Utils utils = new Utils();
-		String message = utils.get1100Characters();
+		String message = utils.get1100CharactersStub();
 		String recipient = "Bob";
 		try {
 			cp.sendMessage(message, recipient);
@@ -233,7 +237,7 @@ public class ClientPeerTest {
 		}
 	}
 
-	// Test low Boundary for sendMessage(String message, String recipient) method
+	// Test low Boundary (Right-BICEP) for sendMessage(String message, String recipient) method
 	// test for 1 character message
 	@Test
 	public void testLowBoundaryMessageSecondSendMessage() throws Exception {
@@ -247,7 +251,7 @@ public class ClientPeerTest {
 		}
 	}
 
-	// Test top Boundary for sendMessage(String message, String recipient) method
+	// Test top Boundary (Right-BICEP) for sendMessage(String message, String recipient) method
 	// test for 19 character recipient
 	@Test
 	public void testTopBoundaryRecipientSecondSendMessage() throws Exception {
@@ -261,7 +265,7 @@ public class ClientPeerTest {
 		}
 	}
 
-	// Test low Boundary for sendMessage(String message, String recipient) method
+	// Test low Boundary (Right-BICEP) for sendMessage(String message, String recipient) method
 	// test for 1 character recipient
 	@Test
 	public void testLowBoundaryRecipientSecondSendMessage() throws Exception {
@@ -274,8 +278,8 @@ public class ClientPeerTest {
 			fail("No exception was expected");
 		}
 	}
-	
-	// Test performance for sendMessage(String message) method
+
+	// Test performance (Right-BICEP) for sendMessage(String message) method
 	@Test
 	public void performanceTestSendMessage() throws Exception {
 		long startTime = System.currentTimeMillis();
@@ -283,6 +287,7 @@ public class ClientPeerTest {
 		String message = "Hello";
 		Utils utils = new Utils();
 		utils.serverFake(9090);
+		Thread.sleep(1000);
 		Socket newSocket = utils.socketFake(this.localhost, 9090);
 		ClientPeer cp = new ClientPeer(this.userName, newSocket);
 		cp.sendMessage(message);
@@ -293,7 +298,7 @@ public class ClientPeerTest {
 		System.out.println(elapsedTime / 1000l + " seconds");
 	}
 
-	// Test performance for sendMessage(String message, String recipient) method
+	// Test performance (Right-BICEP) for sendMessage(String message, String recipient) method
 	@Test
 	public void performanceTestSecondSendMessage() throws Exception {
 		long startTime = System.currentTimeMillis();
@@ -302,6 +307,7 @@ public class ClientPeerTest {
 		String recipient = "Bob";
 		Utils utils = new Utils();
 		utils.serverFakePrivateMessage(9091);
+		Thread.sleep(1000);
 		Socket newSocket = utils.socketFake(this.localhost, 9091);
 		ClientPeer cp = new ClientPeer(this.userName, newSocket);
 		cp.sendMessage(message, recipient);

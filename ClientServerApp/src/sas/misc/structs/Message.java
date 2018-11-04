@@ -16,8 +16,8 @@ import sas.misc.server.exceptions.InvalidExpeditorLengthException;
  */
 public class Message implements Serializable {
 
-	// expeditor trebuie sa fie mai mic de 20 de caractere si mai mare de 0
-	// continut trebuie sa fie mai mic de 1100 de caractere si mai mare de 0
+	// expeditor trebuie sa fie mai mic sau egal cu 20 de caractere si mai mare de 0
+	// continut trebuie sa fie mai mic sau egal cu 1100 de caractere si mai mare de 0
 	private String expeditor;
 	private String continut;
 

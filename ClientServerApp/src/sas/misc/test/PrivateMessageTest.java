@@ -23,30 +23,37 @@ public class PrivateMessageTest {
 		pm = new PrivateMessage(destinatar, expeditor, continut);
 	}
 
+	// Test instantiated object not null (Right from Right-BICEP principle)
 	@Test
 	public void constructorTestNotNull() {
 		assertNotNull(pm);
 	}
 
+	// Test if constructor initializes the destinatar
+	// (Right from Right-BICEP principle)
 	@Test
 	public void constructorTestDestinatar() {
 		String expected = "Alice";
 		assertEquals(expected, pm.getRecipient());
 	}
 
+	// Test if constructor initializes the expeditor
+	// (Right from Right-BICEP principle)
 	@Test
 	public void constructorTestExpeditor() {
 		String expected = "Bob";
 		assertEquals(expected, pm.getExpeditor());
 	}
 
+	// Test if constructor initializes the continut
+		// (Right from Right-BICEP principle)
 	@Test
 	public void constructorTestContinut() {
 		String expected = "Hello!";
 		assertEquals(expected, pm.getContinut());
 	}
 
-	// test Error for constructor
+	// Test Error for constructor
 	// lungime destinatar mai mica decat 1
 	@Test
 	public void constructorLowErrorTest() {
@@ -59,10 +66,10 @@ public class PrivateMessageTest {
 	}
 
 	// test Error for constructor
-	// lungime destinatar mai mica decat 20
+	// lungime destinatar mai mare decat 20
 	@Test
 	public void constructorTopErrorTest() throws Exception {
-		String destinatar = new Utils().stringLengthUp20;
+		String destinatar = new Utils().stringLengthUp20Stub();
 		try {
 			PrivateMessage pm = new PrivateMessage(destinatar, expeditor, continut);
 			fail("Expected an InvalidContentLengthException to be thrown");
@@ -70,11 +77,11 @@ public class PrivateMessageTest {
 		}
 	}
 
-	// test up boundary for constructor
+	// test top boundary for constructor
 	// lungime destinatar de 20 de caractere
 	@Test
 	public void constructorTopBoundaryTest() throws Exception {
-		String destinatar = new Utils().stringLength20;
+		String destinatar = new Utils().stringLength20Stub();
 		try {
 			PrivateMessage pm = new PrivateMessage(destinatar, expeditor, continut);
 		} catch (InvalidContentLengthException e) {
@@ -82,7 +89,7 @@ public class PrivateMessageTest {
 		}
 	}
 
-	// test up boundary for constructor
+	// test bottom boundary for constructor
 	// lungime destinatar de 1 caracter
 	@Test
 	public void constructorLowBoundaryTest() throws Exception {

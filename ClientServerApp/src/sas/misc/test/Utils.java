@@ -17,12 +17,35 @@ public class Utils {
 	static String receivedMessage;
 	static Thread messageThread;
 	static Thread privateMessageThread;
-	String stringLength20 = "amcdloedlcfrodscvghy";
-	String stringLengthUp20 = "amcdloedlcfrodscvghyp";
-	
+
 	public Utils() {
 //		pipeOut = new PipedOutputStream();
 //		System.setOut(new PrintStream(pipeOut));
+	}
+
+	public String stringLength20Stub() {
+		return "amcdloedlcfrodscvghy";
+	}
+
+	public String stringLengthUp20Stub() {
+		return "amcdloedlcfrodscvghyp";
+	}
+
+	public String get1100CharactersStub() {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 55; i++) {
+			sb.append(stringLength20Stub());
+		}
+		return sb.toString();
+	}
+	
+	public String nonPrintableCharacters() {
+	    char RECORD_SEPARATOR = 0x1e;
+	    char END_OF_TEXT = 0x03;
+	    StringBuilder sb = new StringBuilder();
+	    sb.append(RECORD_SEPARATOR);
+	    sb.append(END_OF_TEXT);
+	    return sb.toString();
 	}
 
 	public void serverFake(int port) {
@@ -32,7 +55,7 @@ public class Utils {
 				try {
 					ServerSocket myServer = new ServerSocket(port);
 					Socket s = myServer.accept();
-					System.out.println("ServerStub - accepted connection");
+					System.out.println("ServerFake - accepted connection");
 					Message m = null;
 					while (m == null) {
 						try {
@@ -54,7 +77,7 @@ public class Utils {
 		};
 		messageThread.start();
 	}
-	
+
 	public void serverFakePrivateMessage(int port) {
 
 		privateMessageThread = new Thread() {
@@ -62,7 +85,7 @@ public class Utils {
 				try {
 					ServerSocket myServer = new ServerSocket(port);
 					Socket s = myServer.accept();
-					System.out.println("ServerStub - accepted connection");
+					System.out.println("ServerFake - accepted connection");
 					PrivateMessage m = null;
 					while (m == null) {
 						try {
@@ -106,12 +129,4 @@ public class Utils {
 //		}
 //		String lastLine = c;
 //	}
-	
-	public String get1100Characters() {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < 55; i++) {
-			sb.append(stringLength20);
-		}
-		return sb.toString();
-	}
 }
