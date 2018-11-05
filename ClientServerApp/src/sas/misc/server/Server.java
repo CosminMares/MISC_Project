@@ -45,7 +45,7 @@ public class Server {
             serverSocket.close();
             System.out.println("obj ServerPeer pe socket-ul conectat a fost creat!");
         } catch (IOException ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }

@@ -11,8 +11,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import sas.misc.client.ClientPeer;
+import sas.misc.intefaces.NetworkMessage;
+import sas.misc.intefaces.NetworkPrivateMessage;
 import sas.misc.server.Server;
 import sas.misc.server.exceptions.InvalidContentLengthException;
 import sas.misc.server.exceptions.InvalidExpeditorLengthException;
@@ -33,20 +36,21 @@ public class ClientPeerTest {
 
 	@Before
 	public void setUp() {
-		this.userName = "John";
-		this.localhost = "127.0.0.1";
-		this.port = 9000;
-		try {
-			s = new Socket(localhost, port);
-		} catch (IOException e) {
-		}
-
 		this.thread = new Thread() {
 			public void run() {
 				Server.main(null);
 			}
 		};
 		thread.start();
+
+		this.userName = "John";
+		this.localhost = "127.0.0.1";
+		this.port = 9000;
+		try {
+			Thread.sleep(100);
+			s = new Socket(localhost, port);
+		} catch (Exception e) {
+		}
 	}
 	
 	@After
@@ -108,6 +112,7 @@ public class ClientPeerTest {
 	}
 
 	// Test Right (Right-BICEP) for sendMessage(String message) method
+	@Category(NetworkMessage.class)
 	@Test
 	public void testSendMessageFunctionality() throws Exception {
 		String expectedMessage = "John: Hello";
@@ -115,7 +120,7 @@ public class ClientPeerTest {
 		Utils utils = new Utils();
 		utils.serverFake(9100);
 		Thread.sleep(1000);
-		Socket newSocket = utils.socketFake(this.localhost, 9100);
+		Socket newSocket = utils.socketSpy(this.localhost, 9100);
 		ClientPeer cp = new ClientPeer(this.userName, newSocket);
 		cp.sendMessage(message);
 		while (!utils.messageThread.isAlive()) {
@@ -125,6 +130,7 @@ public class ClientPeerTest {
 
 	// Test top Interval Error for sendMessage(String message) method
 	// Error form Right-BICEP
+	@Category(NetworkMessage.class)
 	@Test
 	public void testTopIntervalErrorSendMessage() throws Exception {
 		ClientPeer cp = new ClientPeer(this.localhost, this.s);
@@ -139,6 +145,7 @@ public class ClientPeerTest {
 
 	// Test low Interval Error for sendMessage(String message) method
 	// Error form Right-BICEP
+	@Category(NetworkMessage.class)
 	@Test
 	public void testBottomIntervalErrorSendMessage() throws Exception {
 		ClientPeer cp = new ClientPeer(this.localhost, this.s);
@@ -152,6 +159,7 @@ public class ClientPeerTest {
 
 	// Test top Boundary (Right-BICEP) for sendMessage(String message) method
 	// test for 1100 characters message
+	@Category(NetworkMessage.class)
 	@Test
 	public void testTopBoundarySendMessage() throws Exception {
 		ClientPeer cp = new ClientPeer(this.localhost, this.s);
@@ -166,6 +174,7 @@ public class ClientPeerTest {
 
 	// Test low Boundary (Right-BICEP) for sendMessage(String message) method
 	// Test for 1 character message
+	@Category(NetworkMessage.class)
 	@Test
 	public void testLowBoundarySendMessage() throws Exception {
 		ClientPeer cp = new ClientPeer(this.localhost, this.s);
@@ -178,15 +187,16 @@ public class ClientPeerTest {
 	}
 
 	// Test Right (Right-BICEP) for sendMessage(String message, String recipient) method
+	@Category(NetworkPrivateMessage.class)
 	@Test
-	public void testSendMessageTwoFunctionality() throws Exception {
+	public void testSendPrivateMessageFunctionality() throws Exception {
 		String recipient = "Bob";
 		String expectedMessage = "(priv)John: Hello";
 		String message = "Hello";
 		Utils utils = new Utils();
 		utils.serverFakePrivateMessage(9091);
 		Thread.sleep(1000);
-		Socket newSocket = utils.socketFake(this.localhost, 9091);
+		Socket newSocket = utils.socketSpy(this.localhost, 9091);
 		ClientPeer cp = new ClientPeer(this.userName, newSocket);
 		cp.sendMessage(message, recipient);
 		while (!utils.privateMessageThread.isAlive()) {
@@ -196,8 +206,9 @@ public class ClientPeerTest {
 
 	// Test Error (Right-BICEP) at message length for sendMessage(String message, String
 	// recipient) method
+	@Category(NetworkPrivateMessage.class)
 	@Test
-	public void testErrorMessageForSecondSendMessage() throws Exception {
+	public void testErrorMessageForSendPrivateMessage() throws Exception {
 		ClientPeer cp = new ClientPeer(this.localhost, this.s);
 		String message = "";
 		String recipient = "Bob";
@@ -210,8 +221,9 @@ public class ClientPeerTest {
 
 	// Test Error (Right-BICEP) at message length for sendMessage(String message, String
 	// recipient) method
+	@Category(NetworkPrivateMessage.class)
 	@Test
-	public void testErrorRecipientForSecondSendMessage() throws Exception {
+	public void testErrorRecipientForSendPrivateMessage() throws Exception {
 		ClientPeer cp = new ClientPeer(this.localhost, this.s);
 		String message = "Hello";
 		String recipient = "";
@@ -224,8 +236,9 @@ public class ClientPeerTest {
 
 	// Test top Boundary (Right-BICEP) for sendMessage(String message, String recipient) method
 	// test for 1100 characters message
+	@Category(NetworkPrivateMessage.class)
 	@Test
-	public void testTopBoundaryMessageSecondSendMessage() throws Exception {
+	public void testTopBoundaryMessageSendPrivateMessage() throws Exception {
 		ClientPeer cp = new ClientPeer(this.localhost, this.s);
 		Utils utils = new Utils();
 		String message = utils.get1100CharactersStub();
@@ -239,8 +252,9 @@ public class ClientPeerTest {
 
 	// Test low Boundary (Right-BICEP) for sendMessage(String message, String recipient) method
 	// test for 1 character message
+	@Category(NetworkPrivateMessage.class)
 	@Test
-	public void testLowBoundaryMessageSecondSendMessage() throws Exception {
+	public void testLowBoundaryMessageSendPrivateMessage() throws Exception {
 		ClientPeer cp = new ClientPeer(this.localhost, this.s);
 		String message = "1";
 		String recipient = "Bob";
@@ -253,8 +267,9 @@ public class ClientPeerTest {
 
 	// Test top Boundary (Right-BICEP) for sendMessage(String message, String recipient) method
 	// test for 19 character recipient
+	@Category(NetworkPrivateMessage.class)
 	@Test
-	public void testTopBoundaryRecipientSecondSendMessage() throws Exception {
+	public void testTopBoundaryRecipientSendPrivateMessage() throws Exception {
 		ClientPeer cp = new ClientPeer(this.localhost, this.s);
 		String message = "Hello";
 		String recipient = "qwertyuiopasdfghjkl"; // 19 characters string
@@ -267,8 +282,9 @@ public class ClientPeerTest {
 
 	// Test low Boundary (Right-BICEP) for sendMessage(String message, String recipient) method
 	// test for 1 character recipient
+	@Category(NetworkPrivateMessage.class)
 	@Test
-	public void testLowBoundaryRecipientSecondSendMessage() throws Exception {
+	public void testLowBoundaryRecipientSendPrivateMessage() throws Exception {
 		ClientPeer cp = new ClientPeer(this.localhost, this.s);
 		String message = "Hello";
 		String recipient = "1";
@@ -280,6 +296,7 @@ public class ClientPeerTest {
 	}
 
 	// Test performance (Right-BICEP) for sendMessage(String message) method
+	@Category(NetworkMessage.class)
 	@Test
 	public void performanceTestSendMessage() throws Exception {
 		long startTime = System.currentTimeMillis();
@@ -288,19 +305,20 @@ public class ClientPeerTest {
 		Utils utils = new Utils();
 		utils.serverFake(9090);
 		Thread.sleep(1000);
-		Socket newSocket = utils.socketFake(this.localhost, 9090);
+		Socket newSocket = utils.socketSpy(this.localhost, 9090);
 		ClientPeer cp = new ClientPeer(this.userName, newSocket);
 		cp.sendMessage(message);
 		while (!utils.messageThread.isAlive()) {
 		}
 		long stopTime = System.currentTimeMillis();
-		long elapsedTime = stopTime - startTime;
-		System.out.println(elapsedTime / 1000l + " seconds");
+		long elapsedTime = (stopTime - startTime)/1000l;
+		System.out.println(elapsedTime == 1 ? elapsedTime + " second" : elapsedTime + " seconds");
 	}
 
 	// Test performance (Right-BICEP) for sendMessage(String message, String recipient) method
+	@Category(NetworkPrivateMessage.class)
 	@Test
-	public void performanceTestSecondSendMessage() throws Exception {
+	public void performanceTestSendPrivateMessage() throws Exception {
 		long startTime = System.currentTimeMillis();
 
 		String message = "Hello";
@@ -308,15 +326,14 @@ public class ClientPeerTest {
 		Utils utils = new Utils();
 		utils.serverFakePrivateMessage(9091);
 		Thread.sleep(1000);
-		Socket newSocket = utils.socketFake(this.localhost, 9091);
+		Socket newSocket = utils.socketSpy(this.localhost, 9091);
 		ClientPeer cp = new ClientPeer(this.userName, newSocket);
 		cp.sendMessage(message, recipient);
 		while (!utils.privateMessageThread.isAlive()) {
 		}
 		long stopTime = System.currentTimeMillis();
-
-		long elapsedTime = stopTime - startTime;
-		System.out.println(elapsedTime / 1000l + " seconds");
+		long elapsedTime = (stopTime - startTime)/1000l;
+		System.out.println(elapsedTime == 1 ? elapsedTime + " second" : elapsedTime + " seconds");
 	}
 
 }

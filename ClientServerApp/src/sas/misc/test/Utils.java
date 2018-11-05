@@ -17,7 +17,8 @@ public class Utils {
 	static String receivedMessage;
 	static Thread messageThread;
 	static Thread privateMessageThread;
-
+	static int numberOfSockets;
+	
 	public Utils() {
 //		pipeOut = new PipedOutputStream();
 //		System.setOut(new PrintStream(pipeOut));
@@ -61,7 +62,7 @@ public class Utils {
 						try {
 							ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
 							m = (Message) ois.readObject();
-							System.out.println(m.toString());
+							//System.out.println(m.toString());
 							if (m.toString().length() != 0) {
 								Utils.receivedMessage = m.toString();
 								s.close();
@@ -91,7 +92,7 @@ public class Utils {
 						try {
 							ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
 							m = (PrivateMessage) ois.readObject();
-							System.out.println(m.toString());
+							//System.out.println(m.toString());
 							if (m.toString().length() != 0) {
 								Utils.receivedMessage = m.toString();
 								s.close();
@@ -108,13 +109,12 @@ public class Utils {
 		privateMessageThread.start();
 	}
 
-	public Socket socketFake(String address, int port) {
+	public Socket socketSpy(String address, int port) {
 		Socket s = null;
 		try {
 			s = new Socket(address, port);
-		} catch (UnknownHostException e) {
-		} catch (IOException e) {
-		}
+			numberOfSockets++;
+		} catch (IOException e) {}
 		return s;
 	}
 

@@ -38,7 +38,7 @@ public class ServerPeer {
                 Message m = (Message) ois.readObject();
                 System.out.println(m.toString());
             } catch (IOException | ClassNotFoundException ex) {
-                Logger.getLogger(ServerPeer.class.getName()).log(Level.SEVERE, null, ex);
+                //Logger.getLogger(ServerPeer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
