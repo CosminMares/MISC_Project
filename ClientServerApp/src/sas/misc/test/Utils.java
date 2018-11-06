@@ -67,7 +67,7 @@ public class Utils {
 								Utils.receivedMessage = m.toString();
 								s.close();
 								myServer.close();
-								this.interrupt();
+								messageThread.interrupt();
 							}
 						} catch (IOException | ClassNotFoundException ex) {
 						}
@@ -97,7 +97,7 @@ public class Utils {
 								Utils.receivedMessage = m.toString();
 								s.close();
 								myServer.close();
-								this.interrupt();
+								privateMessageThread.interrupt();
 							}
 						} catch (IOException | ClassNotFoundException ex) {
 						}

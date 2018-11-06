@@ -33,13 +33,21 @@ public class MessageTest {
 		String expected = "John";
 		assertEquals(expected, message.getExpeditor());
 	}
-		
+
 	// Conformance test from CORRECT principle
 	@Test
 	public void constructorExpeditorNonPrintable() throws Exception {
 		Message m = new Message(new Utils().nonPrintableCharacters(), "Hello");
 		// System.out.println(m.getExpeditor());
 		assertEquals(new Utils().nonPrintableCharacters(), m.getExpeditor());
+	}
+
+	// Conformance test from CORRECT principle
+	@Test
+	public void constructorContinutNonPrintable() throws Exception {
+		Message m = new Message("John", new Utils().nonPrintableCharacters());
+		// System.out.println(m.getContinut());
+		assertEquals(new Utils().nonPrintableCharacters(), m.getContinut());
 	}
 
 	// Test if constructor initializes the continut
@@ -171,5 +179,71 @@ public class MessageTest {
 		Message m2 = new Message("John", "Hello!");
 		m1.setContinut("Hello!");
 		assertEquals(m1.getContinut(), m2.getContinut());
+	}
+
+	// Test Right from Right-BICEP principle
+	// Reference from CORRECT
+	@Test
+	public void testExpeditorLength() {
+		assertTrue(message.expeditorLength("abc"));
+	}
+
+	// Test Right from Right-BICEP principle
+	// Reference from CORRECT
+	@Test
+	public void testContinutLength() {
+		assertTrue(message.continutLength("abcd"));
+	}
+
+	// Test Boundary from Right-BICEP principle
+	// Range from CORRECT
+	@Test
+	public void testBottomBoundaryExpeditorLengthMethod() {
+		assertTrue(message.expeditorLength("1"));
+	}
+
+	// Test Boundary from Right-BICEP principle
+	// Range from CORRECT
+	@Test
+	public void testTopBoundaryExpeditorLengthMethod() {
+		assertTrue(message.expeditorLength(new Utils().stringLength20Stub()));
+	}
+
+	// Test Boundary from Right-BICEP principle
+	// Range from CORRECT
+	@Test
+	public void testBottomBoundaryContinutLength() {
+		assertTrue(message.continutLength("1"));
+	}
+
+	// Test Boundary from Right-BICEP principle
+	// Range from CORRECT
+	@Test
+	public void testTopBoundaryContinutLength() {
+		assertTrue(message.continutLength(new Utils().get1100CharactersStub()));
+	}
+
+	// Test Error from Right-BICEP principle
+	@Test
+	public void testBottomErrorExpeditorLengthMethod() {
+		assertFalse(message.expeditorLength(""));
+	}
+	
+	// Test Error from Right-BICEP principle
+	@Test
+	public void testTopErrorExpeditorLengthMethod() {
+		assertFalse(message.expeditorLength(new Utils().stringLengthUp20Stub()));
+	}
+
+	// Test Error from Right-BICEP principle
+	@Test
+	public void testBottomErrorContinutLengthMethod() {
+		assertFalse(message.continutLength(""));
+	}
+	
+	// Test Error from Right-BICEP principle
+	@Test
+	public void testTopErrorContinutLengthMethod() {
+		assertFalse(message.continutLength(new Utils().get1100CharactersStub() + 'a'));
 	}
 }

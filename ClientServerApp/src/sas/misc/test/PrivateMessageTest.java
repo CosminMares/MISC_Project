@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import sas.misc.server.exceptions.InvalidContentLengthException;
+import sas.misc.structs.Message;
 import sas.misc.structs.PrivateMessage;
 
 public class PrivateMessageTest {
@@ -27,6 +28,11 @@ public class PrivateMessageTest {
 	@Test
 	public void constructorTestNotNull() {
 		assertNotNull(pm);
+	}
+	
+	@Test
+	public void testIfNotSame() throws Exception {
+		assertNotSame(new Message(this.expeditor,this.continut),this.pm);
 	}
 
 	// Test if constructor initializes the destinatar
